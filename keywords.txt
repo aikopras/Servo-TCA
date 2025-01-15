@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map Servo
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+	
+Servo				KEYWORD1
+Servo1				KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+attach				KEYWORD2
+detach				KEYWORD2
+write				KEYWORD2
+read				KEYWORD2
+attached			KEYWORD2
+writeMicroseconds		KEYWORD2
+readMicroseconds		KEYWORD2
+acceptsNewValue			KEYWORD2
+constantOutput			KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+ACCEPTS_NEW_VALUES		LITERAL1
+CONSTANT_OUTPUT			LITERAL1
