@@ -148,9 +148,5 @@ void takeOverTCA0() {
 
 void resumeTCA0() {}
 
-#endif
-
-//======================================================================================================
-//#else
-//#error "TCA0 is not defined for this processor"
-#endif
+#endif   // MEGACOREX
+#endif   // TCA and not MegaTinyCore
