@@ -15,8 +15,8 @@
 //
 //******************************************************************************************************
 #include <Arduino.h>
-#include <servo_TCA0.h>      // For objects of the servo class (TCA0)
-#include <servo_TCA1.h>      // For objects of the servo1 class (TCA1)
+#include <Servo_TCA0.h>      // For objects of the servo class (TCA0)
+#include <Servo_TCA1.h>      // For objects of the servo1 class (TCA1)
 
 #define CPU_Pin PIN_PD7      // To give the main loop something to do. 
 
