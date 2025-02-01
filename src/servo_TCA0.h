@@ -73,6 +73,8 @@
 // acceptsNewValue() has been added to this servo_TCA library, and tells if the Compare Unit is ready  
 // to receive a new value from the main loop. It has been added as flag, to avoid statements like  
 // "delays(15)" in the main loop, as can be seen in several servo examples (such as sweep).
+// waitTillnextPulse() has also been added, and can be used by the main loop if it knows there is
+// nothing left it can do until the next pulse has been output.
 //
 // constantOutput() has been added to this servo_TCA library, and tells the Compare Unit to stop 
 // setting pulses on the output, and instead make the output signal HIGH (1) or LOW (0). 
@@ -95,6 +97,7 @@ class Servo {
     uint16_t readMicroseconds();                   // returns current pulse width in microseconds
     bool attached();                               // return true if this servo is attached, otherwise false
     bool acceptsNewValue();                        // New for the servo_TCA library: to avoid the delays(15), as seen in several examples.
+    void waitTillnextPulse();                      // New for the servo_TCA library
     void constantOutput(uint8_t on_off);           // New for the servo_TCA library: sets output signal 5V (1) or 0V (0)
 
   private:

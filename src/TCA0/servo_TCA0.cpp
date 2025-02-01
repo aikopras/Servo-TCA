@@ -279,12 +279,18 @@ bool Servo::attached() {
 // determine if the previous pulse value has already been on the output. The purpose of this method is 
 // to avoid the delay() or "if (timepassed > 20ms)" constructs, that are often seen in existing servo 
 // code  (such as in the traditional sweep examples).
+// waitTillnextPulse() allows the calling routine to clear the flag, if there is nothing left to do 
+// within the 20ms period until the next pulse is output.
 //******************************************************************************************************
 bool Servo::acceptsNewValue() {
   bool ready = false;
   uint8_t index = myServo;
   if ((index != INVALID_SERVO)) {ready = channels[index].CMPisSet;}  
   return ready;
+}
+
+void Servo::waitTillnextPulse() {
+  channels[myServo].CMPisSet = false;               // Flag cleared by the main program 
 }
 
 
