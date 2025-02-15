@@ -61,6 +61,8 @@ class ServoMoba: public Servo {
     uint16_t getTreshold1();                       // returns Treshold1 
     uint16_t getTreshold2();                       // returns Treshold2
 
+    uint16_t getFirstCurvePosition();              // returns the servo position for the start of the curve (in us)
+    uint16_t getLastCurvePosition();               // returns the servo position for the end of the curve (in us)
 
     void printCurve();                             // May be used for testing. Uses Serial1
 
@@ -97,6 +99,8 @@ class ServoMoba: public Servo {
     // Moving state: pulsewidth must always stay between these treshold values (in us) 
     int16_t treshold1;                            // Servo may not move beyound this treshold (signed integer!)
     int16_t treshold2;                            // Servo may not move beyound this treshold (signed integer!)
+    int16_t firstCurvePosition;                   // The curve starts here (in us)
+    int16_t lastCurvePosition;                    // The curve ends here (in us)
 
     // Moving state: methods and attributes to control the movement along the curve
     uint16_t positionIn_us(uint16_t xValue);       // Mapping function for the X-axis

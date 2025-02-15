@@ -66,7 +66,9 @@ void ServoMoba1::initCurveFromEEPROM(int adresEeprom, uint8_t stretch) {
     if ((i > 0) && (myCurve[i].time == 0)) ready = true;
     if (i >= SIZE_SERVO_CURVE) ready = true; // protection against erronuous CV values 
     i++;
-  } while (!ready); 
+  } while (!ready);                          // i is now 2 above the last curve element
+  firstCurvePosition = valueTo_us(myCurve[0].position);
+  lastCurvePosition = valueTo_us(myCurve[i-2].position); 
 }
 
 
@@ -83,7 +85,9 @@ void ServoMoba1::initCurveFromPROGMEM(uint8_t curveNumber, uint8_t stretch) {
       if ((i > 0) && (myCurve[i].time == 0)) ready = true;
       src++;
       i++;
-    } while (!ready); 
+    } while (!ready);                          // i is now 2 above the last curve element
+    firstCurvePosition = valueTo_us(myCurve[0].position);
+    lastCurvePosition = valueTo_us(myCurve[i-2].position); 
   }
 }
 
@@ -291,6 +295,14 @@ uint16_t ServoMoba1::getTreshold1() {
 
 uint16_t ServoMoba1::getTreshold2() {
   return (uint16_t)treshold2;
+}
+
+uint16_t ServoMoba1::getFirstCurvePosition() {
+  return firstCurvePosition;
+}
+
+uint16_t ServoMoba1::getLastCurvePosition() {
+  return lastCurvePosition;
 }
 
 
