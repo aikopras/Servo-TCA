@@ -104,7 +104,7 @@ void setup() {
   // ======================================================
   // Load a curve from PROGMEM or EEPROM
   // makeEepromCurve();
-  // servo0.initCurveFromEEPROM(100, 0);
+  // servo0.initCurveFromEEPROM(0, 0, 100);
   servo0.initCurveFromPROGMEM(0, 2);
   // servo0.printCurve();  
   // servo0.moveServoAlongCurve(1);

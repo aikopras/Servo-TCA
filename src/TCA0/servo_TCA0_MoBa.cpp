@@ -54,7 +54,7 @@ void ServoMoba::moveServoAlongCurve(uint8_t direction) {
 };
 
 
-void ServoMoba::initCurveFromEEPROM(int adresEeprom, uint8_t stretch) {
+void ServoMoba::initCurveFromEEPROM(uint8_t curveNumber, uint8_t stretch, int adresEeprom) {
   if (stretch > 0) timeStretch = stretch;
     else timeStretch = 1;
   uint8_t i = 0;                                 // index into the myCurve array
@@ -69,6 +69,7 @@ void ServoMoba::initCurveFromEEPROM(int adresEeprom, uint8_t stretch) {
   } while (!ready);                          // i is now 2 above the last curve element
   firstCurvePosition = valueTo_us(myCurve[0].position);
   lastCurvePosition = valueTo_us(myCurve[i-2].position);
+  indexCurve = curveNumber;
 }
 
 void ServoMoba::initCurveFromPROGMEM(uint8_t curveNumber, uint8_t stretch) {
@@ -87,6 +88,7 @@ void ServoMoba::initCurveFromPROGMEM(uint8_t curveNumber, uint8_t stretch) {
     } while (!ready);                          // i is now 2 above the last curve element
     firstCurvePosition = valueTo_us(myCurve[0].position);
     lastCurvePosition = valueTo_us(myCurve[i-2].position);
+    indexCurve = curveNumber;
   }
 }
 

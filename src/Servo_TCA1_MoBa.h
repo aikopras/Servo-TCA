@@ -33,8 +33,9 @@ class ServoMoba1: public Servo1 {
     void moveServoAlongCurve(uint8_t direction);   // Start moving along the path selected with initCurve
     
     void initCurveFromEEPROM(                      // use a predefined curve from EEPROM
-      int adresEeprom,                             // The starting address in EEPRROM of this curve
-      uint8_t timeStretch                          // 1..255
+      uint8_t indexCurve,                          // 0..3
+      uint8_t timeStretch,                         // 1..255
+      int adresEeprom                              // The starting address in EEPRROM of this curve
     );
     
     void initCurveFromPROGMEM(                     // use a predefined curve from PROGMEM
@@ -63,6 +64,8 @@ class ServoMoba1: public Servo1 {
 
     uint16_t getFirstCurvePosition();              // returns the servo position for the start of the curve (in us)
     uint16_t getLastCurvePosition();               // returns the servo position for the end of the curve (in us)
+
+    uint8_t indexCurve;                            // The curve that is currently loaded into myCurve
 
     void printCurve();                             // May be used for testing. Uses Serial1
 
