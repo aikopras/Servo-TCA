@@ -298,7 +298,7 @@ const curvePoint_t FLASH_MEMORY hp1p[] = {
 
 // The array with (pointers to) the predefined curves differs from that of OpenDCC - OpenDecoder2.
 // In contrast to OpenDCC, the array below does NOT include the EEPROM curves.
-// If the array below gets modified, dom't forget to modify NUMBER_OF_CURVES in curves.h as well
+// If the array below gets modified, dom't forget to modify NUMBER_OF_LAST_CURVE in curves.h as well
 const curvePoint_t *PredefinedCurves[] = {
   lin_A,    // 0
   lin_B,    // 1

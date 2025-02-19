@@ -74,7 +74,7 @@ void ServoMoba::initCurveFromEEPROM(int adresEeprom, uint8_t stretch) {
 void ServoMoba::initCurveFromPROGMEM(uint8_t curveNumber, uint8_t stretch) {
   if (stretch > 0) timeStretch = stretch;
     else timeStretch = 1;
-  if (curveNumber <= NUMBER_OF_CURVES) {
+  if (curveNumber <= NUMBER_OF_LAST_CURVE) {
     const curvePoint_t *src = PredefinedCurves[curveNumber];
     uint8_t i = 0;
     bool ready = false;
