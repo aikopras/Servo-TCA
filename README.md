@@ -77,6 +77,9 @@ Like the core libraries, there are two high-level libraries: one for TCA0 and th
         uint16_t getTreshold1();                       // returns Treshold1
         uint16_t getTreshold2();                       // returns Treshold2
 
+        uint16_t getFirstCurvePosition();              // returns the servo position for the start of the curve (in us)
+        uint16_t getLastCurvePosition();               // returns the servo position for the end of the curve (in us)
+        
         void printCurve();                             // May be used for testing. Uses Serial1
     }
 
