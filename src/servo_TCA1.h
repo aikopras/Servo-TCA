@@ -87,7 +87,7 @@ class Servo1 {
   public:
     Servo1();                                      // constructor
     uint8_t attach(uint8_t pin);                   // attach channel to a Compare Unit, sets pinMode, returns servoIndex or INVALID_SERVO
-    uint8_t attach(uint8_t pin, int min, int max); // as above but also sets min and max values for writes.
+    uint8_t attach(uint8_t pin, int min, int max); // as above but also sets min and max values (in us) for writes.
     void detach();
     void write(uint16_t value);                    // a value < MIN_PULSE_WIDTH is treated as an angle, otherwise as pulse width in microseconds
     void writeMicroseconds(uint16_t value);        // Write pulse width in microseconds

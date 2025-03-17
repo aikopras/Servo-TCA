@@ -69,7 +69,7 @@ void ServoMoba::initCurveFromEEPROM(uint8_t curveNumber, uint8_t stretch, int ad
   } while (!ready);                          // i is now 2 above the last curve element
   firstCurvePosition = valueTo_us(myCurve[0].position);
   lastCurvePosition = valueTo_us(myCurve[i-2].position);
-  indexCurve = curveNumber;
+  previousCurve = curveNumber;
 }
 
 void ServoMoba::initCurveFromPROGMEM(uint8_t curveNumber, uint8_t stretch) {
@@ -89,7 +89,7 @@ void ServoMoba::initCurveFromPROGMEM(uint8_t curveNumber, uint8_t stretch) {
     } while (!ready);                          // i is now 2 above the last curve element
     firstCurvePosition = valueTo_us(myCurve[0].position);
     lastCurvePosition = valueTo_us(myCurve[i-2].position);
-    indexCurve = curveNumber;
+    previousCurve = curveNumber;
   }
 }
 

@@ -19,7 +19,7 @@ The core libraries are upwards compatible with the standard servo libraries, and
     class Servo {
       public:
         uint8_t attach(uint8_t pin);                   // attach channel to a Compare Unit, sets pinMode, returns servoIndex or INVALID_SERVO
-        uint8_t attach(uint8_t pin, int min, int max); // as above but also sets min and max values for writes.
+        uint8_t attach(uint8_t pin, int min, int max); // as above but also sets min and max values (in us) for writes.
         void detach();
         void write(uint16_t value);                    // a value < MIN_PULSE_WIDTH is treated as an angle, otherwise as pulse width in microseconds
         void writeMicroseconds(uint16_t value);        // Write pulse width in microseconds
@@ -53,9 +53,8 @@ Like the core libraries, there are two high-level libraries: one for TCA0 and th
         void moveServoAlongCurve(uint8_t direction);   // Start moving along the path selected with initCurve
 
         void initCurveFromEEPROM(                      // use a predefined curve from EEPROM
-          uint8_t indexCurve,                          // 0..3
-          uint8_t timeStretch,                         // 1..255
-          int adresEeprom);                            // The starting address in EEPRROM of this curve
+          int adresEeprom,                             // The starting address in EEPRROM of this curve
+          uint8_t timeStretch);                        // 1..255
 
         void initCurveFromPROGMEM(                     // use a predefined curve from PROGMEM
           uint8_t indexCurve,                          // See curves.cpp for possible curves

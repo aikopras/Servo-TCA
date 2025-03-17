@@ -65,7 +65,7 @@ class ServoMoba: public Servo {
     uint16_t getFirstCurvePosition();              // returns the servo position for the start of the curve (in us)
     uint16_t getLastCurvePosition();               // returns the servo position for the end of the curve (in us)
 
-    uint8_t indexCurve;                            // The curve that is currently loaded into myCurve
+    uint8_t previousCurve;                         // The curve that is currently loaded into myCurve
 
     void printCurve();                             // May be used for testing. Uses Serial1
 
