@@ -129,7 +129,7 @@ static void initTCA() {
   // STEP 2: Configure CTRL A: Set the prescaler (see above) and enable the TCA peripheral
   _TIMER.CTRLA = PRESCALER_GC | TCA_SINGLE_ENABLE_bm; 
   // STEP 3: Configure CRTL B: set the timer mode: single-slope PWM mode
-  _TIMER.CTRLB |= TCA_SINGLE_WGMODE_SINGLESLOPE_gc; 
+  _TIMER.CTRLB = TCA_SINGLE_WGMODE_SINGLESLOPE_gc;         // 2025/04/22 AP: |= replaced by = 
   // STEP 4: Configure EVCTRL: Disable event counting (which is the default)
   _TIMER.EVCTRL &= ~(TCA_SINGLE_CNTEI_bm);
   // STEP 5: Configure INTCTRL: Enable the overflow interrupt
