@@ -145,6 +145,10 @@ static void initTCA() {
   // This register holds the TOP value for all three Compare Unit. We want an interrupt every 20/3 ms.
   _TIMER.PERBUF = usToTicks(ISR_PERIOD);
   TCA_IsNotRunning = false;
+  // 2025/04/23 AP: A delay is introduced, to avoid that any compare unit gets activated before we
+  // have had one complete period. This seems to be needed with (at least some variants of) dxcore
+  // processors. I do not really understand why this is needed.
+  delay(30);  
 }
 
 static void finISR() {
