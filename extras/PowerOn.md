@@ -3,7 +3,7 @@
 Different servos behave differently when power is switched on. When power is switched on, many make abrupt short movements. One way to avoid / limit these startup movements, is to ensure that the pulse line is high when the power s switch on. To achieve this, constantOutput(1) should
 be called before the servo is attached and the power is supplied to the servo.
 
-You can test this startup behaviour using the sketch [Test_TCA_Power_on.ino](../../examples/Test_TCA_Power_on/Test_TCA_Power_on.ino) in the examples directory.
+You can test this startup behaviour using the sketch [Test_TCA_Power_on.ino](../examples/Test_TCA_Power_on/Test_TCA_Power_on.ino) in the examples directory.
 
 In that sketch edit the #defines to match your board and tests.
 
@@ -38,7 +38,7 @@ Some high-level introduction can be found in this reference (in English):
 - https://www.opendcc.de/elektronik/opendecoder/opendecoder_sw_servo_e.html
 
 ### Code ###
-The sketch [can be found](../../examples/Test_TCA_Power_on/Test_TCA_Power_on.ino) in the examples section, but is also shown below.
+The sketch [can be found](../examples/Test_TCA_Power_on/Test_TCA_Power_on.ino) in the examples section, but is also shown below.
 
 ---
 ```
