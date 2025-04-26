@@ -325,7 +325,7 @@ ISR(ServoHandler) {
   // With each ISR invocation we configure the next Compare Unit. 
   switch (CurrentCompareUnit) { 
     case 0:                                            // Handle Compare Unit 0
-      if (_TIMER.CMP0 != OUT_HIGH) _TIMER.CMP0BUF = 0; // We nust test the entire 16 bit register (testing only CMPH doesn't work)
+    if (_TIMER.CMP0 != OUT_HIGH) _TIMER.CMP0BUF = 0; // We nust test the entire 16 bit register (testing only CMPH doesn't work)
       if ((compareUnit1 != NO_CHANNEL) && (channels[compareUnit1].isActive)) {_TIMER.CMP1BUF = channels[compareUnit1].ticks;}
       if (_TIMER.CMP2 != OUT_HIGH) _TIMER.CMP2BUF = 0;      
       channels[compareUnit1].CMPisSet = true;

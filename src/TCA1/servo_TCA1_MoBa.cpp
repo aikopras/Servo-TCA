@@ -231,14 +231,15 @@ ServoMoba1::ServoMoba1() {
 
 //******************************************************************************************************
 void ServoMoba1::initPulse(
-    idlePulseDefault_t idleDefault,    // low, high or continuous
+    uint8_t idleOutput,                // 0 is low, rest is high
     uint8_t pulseBeforeMoving,         // 0.255. Steps are in 20 ms
-    uint8_t pulseAfterMoving)          // 0.255. Steps are in 20 ms
-  {  
-  idlePulseDefault = idleDefault;
-  if ((idleDefault == high) && (pulseBeforeMoving < 255)) pulseBeforeMoving++;
+    uint8_t pulseAfterMoving) {        // 0.255. Steps are in 20 ms
+  if (idleOutput) idlePulseDefault = high;
+  else idlePulseDefault = low;
+  if (idleOutput && (pulseBeforeMoving < 255)) pulseBeforeMoving++;
   pulseOnBeforeMoving = pulseBeforeMoving;
   pulseOffAfterMoving = pulseAfterMoving;
+  constantOutput(idleOutput);          // sets the idle pulse signal low (0V) or high (3,3 or 5V)
 }
 
 //******************************************************************************************************
