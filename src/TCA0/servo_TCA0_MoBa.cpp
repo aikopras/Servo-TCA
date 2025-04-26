@@ -150,7 +150,7 @@ void ServoMoba::servoMoving() {
   }
   lastPulseWidth = positionIn_us(ticks);
   writeMicroseconds(lastPulseWidth);
-  // Serial1.printf(" %u: %u us\n",ticks, lastPulseWidth);
+  //Serial1.printf(" %u: %u us\n",ticks, lastPulseWidth);
   ticks++;
   if ((index > 0) && (myCurve[index].time == 0)) {          // we have had all segments
     countPulse = pulseOffAfterMoving;
@@ -232,13 +232,15 @@ ServoMoba::ServoMoba() {
 void ServoMoba::initPulse(             // Need not be called in case of a continuous pulse
     uint8_t idleOutput,                // 0 is low, rest is high
     uint8_t pulseBeforeMoving,         // 0.255. Steps are in 20 ms
-    uint8_t pulseAfterMoving) {        // 0.255. Steps are in 20 ms
+    uint8_t pulseAfterMoving,          // 0.255. Steps are in 20 ms
+    uint16_t initialPulseWidth) {      // Pulse width where the servo starts from (after power on)
   if (idleOutput) idlePulseDefault = high;
   else idlePulseDefault = low;
   if (idleOutput && (pulseBeforeMoving < 255)) pulseBeforeMoving++;
   pulseOnBeforeMoving = pulseBeforeMoving;
   pulseOffAfterMoving = pulseAfterMoving;
   constantOutput(idleOutput);          // sets the idle pulse signal low (0V) or high (3,3 or 5V)
+  lastPulseWidth = initialPulseWidth;  // This is the pulse width to be used after startup
 }
 
 //******************************************************************************************************

@@ -46,7 +46,8 @@ class ServoMoba: public Servo {
     void initPulse(                                // What to do with the servo puls signal in idle state?
       uint8_t idleOutput,                          // 0 is low (0V), everything else is high (3,3 or 5V)
       uint8_t pulseBeforeMoving,                   // 0.255. Steps are in 20 ms
-      uint8_t pulseAfterMoving                     // 0.255. Steps are in 20 ms
+      uint8_t pulseAfterMoving,                    // 0.255. Steps are in 20 ms
+      uint16_t initialPulseWidth                   // Pulse width in ms for after startup
     );
     
     void initPower(                                // What to do with the servo power signal in idle state?

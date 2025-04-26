@@ -45,7 +45,7 @@
 
 
 #define SIZE_SERVO_CURVE 24                      // Maximum number of curve points withi a curve
-#define NUMBER_OF_LAST_CURVE 10                  // For PROGMEM! Should match the number in curves.cpp.
+#define NUMBER_OF_LAST_CURVE 11                  // For PROGMEM! Should match the number in curves.cpp.
 
 typedef struct {                                 // A servo curve consists of a sequence of points
   uint8_t time;                                  // counter for the number of 20ms ticks

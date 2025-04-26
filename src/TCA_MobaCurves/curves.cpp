@@ -38,6 +38,7 @@
 //  8 sig_hp0:   | close flag, after-whip          1  240     230   25   700ms
 //  9 sig_hp1:   | open flag, after-whip           1  240      25  230   700ms
 // 10 sig_hp1p:  | open flag, pause, after-whip    1  240      25  230  1280ms
+// 11 sine_AB:   | sinosoidal move, complete sine  1  255     128  128   800ms
 //
 //******************************************************************************************************
 #include <Arduino.h>
@@ -295,10 +296,38 @@ const curvePoint_t FLASH_MEMORY hp1p[] = {
   { 0 , 0 },
 };
 
+const curvePoint_t FLASH_MEMORY sine_AB[] = { 
+  { 0 , 128 },
+  { 3 , 186 },
+  { 5 , 218 },
+  { 7 , 241 },
+  { 9 , 253 },
+  { 10 , 255 },
+  { 11 , 253 },
+  { 13 , 241 },
+  { 15 , 218 },
+  { 17 , 186 },
+  { 20 , 128 },
+  { 23 , 70 },
+  { 25 , 38 },
+  { 27 , 15 },
+  { 29 , 3 },
+  { 30 , 1 },
+  { 31 , 3 },
+  { 33 , 15 },
+  { 35 , 38 },
+  { 37 , 70 },
+  { 40 , 128 },
+  { 0 , 0 },
+};
 
+// -----------------------------------------------------------------------------------------------
 // The array with (pointers to) the predefined curves differs from that of OpenDCC - OpenDecoder2.
 // In contrast to OpenDCC, the array below does NOT include the EEPROM curves.
 // If the array below gets modified, dom't forget to modify NUMBER_OF_LAST_CURVE in curves.h as well
+//
+// - 2025/04/27: sine_AB added (may be used for testing purposes)
+//
 const curvePoint_t *PredefinedCurves[] = {
   lin_A,    // 0
   lin_B,    // 1
@@ -311,4 +340,5 @@ const curvePoint_t *PredefinedCurves[] = {
   sig_hp0,  // 8
   sig_hp1,  // 9
   hp1p,     // 10
+  sine_AB,  // 11
 };
