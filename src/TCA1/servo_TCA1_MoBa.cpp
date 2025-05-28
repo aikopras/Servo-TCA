@@ -50,6 +50,7 @@ void ServoMoba1::moveServoAlongCurve(uint8_t direction) {
   ticks = 0;
   index = 0;
   servoState = start;
+  movementCompleted = false;
   servoStart();
 };
 
@@ -173,6 +174,7 @@ void ServoMoba1::servoFinish() {
     }
   if (move2idle) {
     servoState = idle;
+    movementCompleted = true;
     servoIdle();
   }
 };

@@ -14,6 +14,7 @@
 #include "../Servo_TCA0_MoBa.h"
 #include "../TCA_MobaCurves/curves.h"
 
+// TODO: remove digitalWriteFast
 #define IDLE_ON    digitalWriteFast(PIN_PD4,1); digitalWriteFast(PIN_PD5,0); digitalWriteFast(PIN_PD6,0); digitalWriteFast(PIN_PD7,0);
 #define START_ON   digitalWriteFast(PIN_PD4,0); digitalWriteFast(PIN_PD5,1); digitalWriteFast(PIN_PD6,0); digitalWriteFast(PIN_PD7,0);
 #define MOVING_ON  digitalWriteFast(PIN_PD4,0); digitalWriteFast(PIN_PD5,0); digitalWriteFast(PIN_PD6,1); digitalWriteFast(PIN_PD7,0);
@@ -50,6 +51,7 @@ void ServoMoba::moveServoAlongCurve(uint8_t direction) {
   ticks = 0;
   index = 0;
   servoState = start;
+  movementCompleted = false;
   servoStart();
 };
 
@@ -172,6 +174,7 @@ void ServoMoba::servoFinish() {
     }
   if (move2idle) {
     servoState = idle;
+    movementCompleted = true;
     servoIdle();
   }
 };

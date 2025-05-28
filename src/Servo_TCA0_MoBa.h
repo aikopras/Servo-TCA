@@ -31,7 +31,8 @@ class ServoMoba: public Servo {
     void checkServo();                             // Must be called as often as possible from the main loop 
 
     void moveServoAlongCurve(uint8_t direction);   // Start moving along the path selected with initCurve
-    
+    bool movementCompleted = true;                 // Flag to indicate servo is not moving 
+
     void initCurveFromEEPROM(                      // use a predefined curve from EEPROM
       uint8_t indexCurve,                          // 0..3
       uint8_t timeStretch,                         // 1..255
@@ -68,6 +69,9 @@ class ServoMoba: public Servo {
 
     uint8_t previousCurve;                         // The curve that is currently loaded into myCurve
 
+    void powerOn();                                // Switch power on
+    void powerOff();                               // Switch power off
+
     void printCurve();                             // May be used for testing. Uses Serial1
 
   //====================================================================================================
@@ -88,7 +92,7 @@ class ServoMoba: public Servo {
       idle,
       start,
       moving,
-      finish
+      finish,
     } servoState;
 
     void servoIdle();                              // Actions to be perfomed while in the idle phase
@@ -130,13 +134,9 @@ class ServoMoba: public Servo {
     bool idlePowerIsOff;                           // If true, power will be switch off while idle
     bool PowerOnNextTick;                          // Flag for power switch pin, change in 20ms
     bool PowerOffNextTick;                         // Flag for power switch pin, change in 20ms
-    void powerOn();                                // Switch power now
-    void powerOff();                               // Switch power now
 
     // Internal counters for the start and finish states
     uint8_t countServo;
     uint8_t countPulse;
     uint8_t countPower;
-
-   
 };
