@@ -53,19 +53,22 @@ Like the core libraries, there are two high-level libraries: one for TCA0 and th
         void checkServo();                             // Must be called as often as possible from the main loop
 
         void moveServoAlongCurve(uint8_t direction);   // Start moving along the path selected with initCurve
+        bool movementCompleted = true;                 // Flag to indicate servo is not moving 
 
-        void initCurveFromEEPROM(                      // use a predefined curve from EEPROM
-          int adresEeprom,                             // The starting address in EEPRROM of this curve
-          uint8_t timeStretch);                        // 1..255
+        void initCurveFromEEPROM (                     // use a predefined curve from EEPROM
+          uint8_t indexCurve,                          // 0..3
+          uint8_t timeStretch,                         // 1..255
+          int adresEeprom);                            // The starting address in EEPRROM of this curve
 
         void initCurveFromPROGMEM(                     // use a predefined curve from PROGMEM
           uint8_t indexCurve,                          // See curves.cpp for possible curves
           uint8_t timeStretch);                        // 1..255
 
         void initPulse(                                // What to do with the servo puls signal in idle state?
-          idlePulseDefault_t idleDefault,              // low, high or continuous
+          uint8_t idleOutput,                          // 0 is low (0V), everything else is high (3,3 or 5V)
           uint8_t pulseBeforeMoving,                   // 0.255. Steps are in 20 ms
-          uint8_t pulseAfterMoving);                   // 0.255. Steps are in 20 ms
+          uint8_t pulseAfterMoving,                    // 0.255. Steps are in 20 ms
+          uint16_t initialPulseWidth);                 // Pulse width in ms for after startup
 
         void initPower(                                // What to do with the servo power signal in idle state?
           boolean idlePowerIsOff,                      // should power be switch off while idle?
@@ -81,6 +84,11 @@ Like the core libraries, there are two high-level libraries: one for TCA0 and th
 
         uint16_t getFirstCurvePosition();              // returns the servo position for the start of the curve (in us)
         uint16_t getLastCurvePosition();               // returns the servo position for the end of the curve (in us)
+
+        uint8_t previousCurve;                         // The curve that is currently loaded into myCurve
+
+        void powerOn();                                // Switch power on
+        void powerOff();                               // Switch power off
 
         void printCurve();                             // May be used for testing. Uses Serial1
     }
