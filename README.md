@@ -9,9 +9,9 @@ There are two core libraries, one using the TCA0 timer, and another using the TC
 Since each TCA timer has three Compare Units / Waveform Outputs (WO), each library supports up to 3 servos.
 A sketch may include both libraries, thus the maximum number of servos is 6.
 
-The TCA0 library requires the line `#include <Servo_TCA0_MoBa.h>` at the top of the user sketch, and makes available the class `Servo`. This core library can be used for all processors mentioned above.
+The TCA0 library requires the line `#include <Servo_TCA0.h>` at the top of the user sketch, and makes available the class `Servo`. This core library can be used for all processors mentioned above.
 
-The TCA1 library requires the line `#include <Servo_TCA1_MoBa.h>` at the top of the user sketch, and makes available the class `Servo1`. This core library can only be used with processors that have a TCA1 timer, thus the DA, DB and EA processors with 48 pins or more..  
+The TCA1 library requires the line `#include <Servo_TCA1.h>` at the top of the user sketch, and makes available the class `Servo1`. This core library can only be used with processors that have a TCA1 timer, thus the DA, DB and EA processors with 48 pins or more..  
 
 
 The core libraries are upwards compatible with the standard servo libraries, and implement all the methods that can be found in these standard servo libraries, as well as some additional methods. The (public) methods provided by the `Servo` class are shown below; the `Servo1` class provides exactly the same methods.
