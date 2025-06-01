@@ -3,6 +3,7 @@
 // file:      curves.cpp
 // author:    Aiko Pras
 // history:   2025-02-11 V1.0.0 ap initial version
+//            2025-06-01 V1.0.1 ap move_A and move_B are now between 0..255
 //
 // purpose:   Predefined curves for servos.
 //            The idea is to define a number of curves; each describing a specific path that servos
@@ -27,10 +28,10 @@
 // -------------------------------------------------------------------------------------
 //    Name         Decription                    min  max   start  end    time
 // -------------------------------------------------------------------------------------
-//  0 lin_A      | linear move, part A            25  230      25  230    80ms
-//  1 lin_B      | linear move, part B            25  230     230   25    80ms
-//  2 move_A     | smooth move, part A (cos)      25  230      25  230   180ms
-//  3 move_B     | smooth move, part B (cos)      25  230     230   25   180ms
+//  0 lin_A      | linear move, part A             0  255       0  255    80ms
+//  1 lin_B      | linear move, part B             0  255     255    0    80ms
+//  2 move_A     | smooth move, part A (cos)       0  255       0  255   180ms
+//  3 move_B     | smooth move, part B (cos)       0  255     255    0   180ms
 //  4 sine_A     | sinosoidal wave, part A       128  255     128  128   400ms
 //  5 sine_B     | sinosoidal wave, part B         1  128     128  128   400ms 
 //  6 whip_A     | parabola, part A              128  255     128  128   320ms
@@ -46,48 +47,50 @@
 
 
 const curvePoint_t FLASH_MEMORY lin_A[] = {
-  { 0 , 25 },
+  { 0 , 0 },
   { 2 , 128 },
-  { 4 , 230 },
+  { 4 , 255 },
   { 0 , 0 },
 };
 
 const curvePoint_t FLASH_MEMORY lin_B[] = { 
-  { 0 , 230 },
+  { 0 , 255 },
   { 2 , 128 },
-  { 4 , 25 },
+  { 4 , 0 },
   { 0 , 0 },
 };
 
+
 const curvePoint_t FLASH_MEMORY move_A[] = { 
-  { 0 , 25 },
-  { 1 , 29 },
-  { 2 , 39 },
-  { 3 , 55 },
-  { 4 , 77 },
+  { 0 , 0 },
+  { 1 , 5 },
+  { 2 , 17 },
+  { 3 , 37 },
+  { 4 , 64 },
   { 6 , 128 },
-  { 8 , 180 },
-  { 9 , 201 },
-  { 10 , 217 },
-  { 11 , 227 },
-  { 12 , 231 },
+  { 8 , 192 },
+  { 9 , 218 },
+  { 10 , 238 },
+  { 11 , 250 },
+  { 12 , 255 },
   { 0 , 0 },
 };
 
 const curvePoint_t FLASH_MEMORY move_B[] = { 
-  { 0 , 231 },
-  { 1 , 227 },
-  { 2 , 217 },
-  { 3 , 201 },
-  { 4 , 180 },
-  { 6 , 128 },
-  { 8 , 77 },
-  { 9 , 55 },
-  { 10 , 39 },
-  { 11 , 29 },
-  { 12 , 25 },
+  { 0 , 0 },
+  { 1 , 255 },
+  { 2 , 250 },
+  { 3 , 238 },
+  { 4 , 218 },
+  { 6 , 192 },
+  { 8 , 128 },
+  { 9 , 64 },
+  { 10 , 37 },
+  { 11 , 17 },
+  { 12 , 5 },
   { 0 , 0 },
 };
+
 
 const curvePoint_t FLASH_MEMORY sig_hp0[] = { 
   { 0 , 230 },
