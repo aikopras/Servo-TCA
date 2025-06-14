@@ -35,11 +35,11 @@ Compared to standard servo libraries, three new methods were added: `acceptsNewV
 Different servos behave differently when power is switched on. When power is switched on, many make abrupt short movements. To avoid such movements, see [these instructions](extras/PowerOn.md).
 
 ## High-level libraries ##
-The core libraries allow servo's to move from one position to another. Such move is nearly instantaneous, which is often not desirable. A better approach would be that servos move slowly from one position to another or, even better, follow a specific curve between the start and end position. Since servos not only make noise while moving, but often also while in rest, wouldn't it be nice if we were able to switch the servo power and/or pulse signal off, once the end position is reached? This is exactly what the high-level libraries add to the core libraries.
+The core libraries allow servo's to move from one position to another. Such move is nearly instantaneous, which is often not desirable. A better approach would be that servos move slowly from one position to another or, even better, follow a specific curve between the start and end position. A number of curves have therefore been predefines, see [this overview](extra/Curves/curves.md) for details.
 
-<div style="text-align:center"><img src="https://www.opendcc.de/elektronik/opendecoder/curve_hp1p.gif" /></div>
+Since servos not only make noise while moving, but often also while in rest, wouldn't it be nice if we were able to switch the servo power and/or pulse signal off, once the end position is reached? This is exactly what the high-level libraries add to the core libraries.
 
-The "high-level" libraries are strongly inspired by, and with respect to functionality, copied from the [OpenDecoder 2](https://www.opendcc.de/elektronik/opendecoder/opendecoder_sw_servo.html) of the [OpenDCC project](https://www.opendcc.de/index.html). To give an idea of how a curve may look like, above a (linked) figure from the OpenDCC project. In fact, all predefined curves in this library are copied from OpenDecoder 2.
+The "high-level" libraries are strongly inspired by, and with respect to functionality, copied from the [OpenDecoder 2](https://www.opendcc.de/elektronik/opendecoder/opendecoder_sw_servo.html) of the [OpenDCC project](https://www.opendcc.de/index.html).
 
 Like the core libraries, there are two high-level libraries: one for TCA0 and the other for TCA1. Technically speaking, the first high-level library inherits the Servo class for TCA0, and the second inherits the Servo class from TCA1.
 
@@ -53,7 +53,7 @@ Like the core libraries, there are two high-level libraries: one for TCA0 and th
         void checkServo();                             // Must be called as often as possible from the main loop
 
         void moveServoAlongCurve(uint8_t direction);   // Start moving along the path selected with initCurve
-        bool movementCompleted = true;                 // Flag to indicate servo is not moving 
+        bool movementCompleted = true;                 // Flag to indicate servo is not moving
 
         void initCurveFromEEPROM (                     // use a predefined curve from EEPROM
           uint8_t indexCurve,                          // 0..3
