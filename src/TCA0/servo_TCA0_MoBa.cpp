@@ -3,6 +3,7 @@
 // file:      servo_TCA0_MoBa.cpp
 // author:    Aiko Pras
 // history:   2025-02-22 V1.0.0 ap initial version
+//            2025-12-06 V1.0.6 ap Debug statements (digitalWriteFast) removed
 //
 // purpose:   Class for MoBa Servo's. Inherits from Servo.
 //            To be used in conjunction with the TCA0 timer
@@ -13,12 +14,6 @@
 #include <EEPROM.h>
 #include "../Servo_TCA0_MoBa.h"
 #include "../TCA_MobaCurves/curves.h"
-
-// TODO: remove digitalWriteFast
-#define IDLE_ON    digitalWriteFast(PIN_PD4,1); digitalWriteFast(PIN_PD5,0); digitalWriteFast(PIN_PD6,0); digitalWriteFast(PIN_PD7,0);
-#define START_ON   digitalWriteFast(PIN_PD4,0); digitalWriteFast(PIN_PD5,1); digitalWriteFast(PIN_PD6,0); digitalWriteFast(PIN_PD7,0);
-#define MOVING_ON  digitalWriteFast(PIN_PD4,0); digitalWriteFast(PIN_PD5,0); digitalWriteFast(PIN_PD6,1); digitalWriteFast(PIN_PD7,0);
-#define FINISH_ON  digitalWriteFast(PIN_PD4,0); digitalWriteFast(PIN_PD5,0); digitalWriteFast(PIN_PD6,0); digitalWriteFast(PIN_PD7,1);
 
 //******************************************************************************************************
 // moveServoAlongCurve() moves the servo along the curve that has been stored in the myCurve array.
