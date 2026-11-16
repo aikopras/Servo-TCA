@@ -3,6 +3,7 @@
 // File:      Test_TCA_Power_On.ino
 // Author:    Aiko Pras
 // History:   2025/04/26
+//            2026/11/16 V2.0.0: class Servo6 (was Servo) and header Servo_TCA.h
 //
 // Different servos behave differently when power is switched on. When power is switched on, 
 // many make abrupt short movements. One way to avoid / limit these startup movements, is to ensure 
@@ -33,7 +34,7 @@
 //
 // ******************************************************************************************************
 #include <Arduino.h>
-#include <Servo_TCA0.h>                  // For objects of the servo class (TCA0)
+#include <Servo_TCA.h>                   // For objects of the Servo6 class
 
 
 #define SERVO_PIN             PIN_PF0    // Select the pin that suits your board.
@@ -44,7 +45,7 @@
 
 
 // ******************************************************************************************************
-Servo  servo0;                           // Instantiate the three servo's on TCA0
+Servo6 servo0;                           // Instantiate the servo
 
 
 void setup() {

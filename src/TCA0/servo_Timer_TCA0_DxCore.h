@@ -3,6 +3,9 @@
 // file:      servo_Timer_TCA0.h
 // author:    Aiko Pras
 // history:   2024-01-15 V1.0.0 ap initial version
+//            2026-11-16 V2.0.0 ap TCA0 and TCA1 code are now included in the same .cpp file. Therefore
+//                                 the functions got the postfix TCA0, and the state is kept in tca[0].
+//                                 New: pinFitsTCA0()
 //
 // purpose:   TCA0 specific code for DxCore and MEGACOREX
 //
@@ -16,17 +19,16 @@
 // Only compile if we have a TCA0 timer, and this is not a MEGATINYCORE
 #if defined(TCA0) && !defined(MEGATINYCORE_SERIES)
 
-// The following defines enable an easy switch between TCA0 and TCA1  
-#define _TIMER        TCA0.SINGLE               // Used in the .cpp file
-#define takeOverTCA() takeOverTCA0()            // Used in the .cpp file
-#define resumeTCA()   resumeTCA0()              // Used in the .cpp file
-#define ServoHandler  TCA0_OVF_vect             // Used in the .cpp file
+// Version 2: The defines _TIMER, takeOverTCA(), resumeTCA() and ServoHandler have been removed.
+// servo_TCA.cpp now addresses TCA0 and TCA1 directly.
 
 //******************************************************************************************************
 // The initialisation of the multplexer depends on the processor being used.
 // DxCore and MEGACOREX processors require that all pins belong to the same port
+// Version 2: If onlyCheck is true, the PORTMUX register is not changed. In that case only
+// the return value is of interest: does the multiplexer support this port?
 //******************************************************************************************************
-static boolean initMultiplexer(uint8_t port) {
+static boolean initMultiplexerTCA0(uint8_t port, boolean onlyCheck) {
   boolean configured = false;
   // DxCore will preset the PORTMUX to a certain port during startup. 
   // Therefore we have to clear the TCA0 bits before we can set it with new values. 
@@ -70,30 +72,30 @@ static boolean initMultiplexer(uint8_t port) {
     break;
     #endif
   }  
-  if (configured) PORTMUX.TCAROUTEA = tcaroutea; // write the temp variable back to the register.
+  if (configured && !onlyCheck) PORTMUX.TCAROUTEA = tcaroutea; // write the temp variable back to the register.
   return configured;
 }
 
 
-static boolean enableCompareUnit(uint8_t compareUnit, uint8_t servoIndex) {
+static boolean enableCompareUnitTCA0(uint8_t compareUnit, uint8_t servoIndex) {
   boolean enabled = false;
   switch (compareUnit) { 
     case 0:                                                         // Compare Unit 0
-      compareUnit0 = servoIndex;                                    // index into the channels array
+      tca[0].compareUnit0 = servoIndex;                             // index into the channels array
       channels[servoIndex].CompareUnit = 0;                         // attach the channel to the Compare Unit
-      _TIMER.CTRLB |= TCA_SINGLE_CMP0EN_bm;                         // enable Compare Unit 0
+      TCA0.SINGLE.CTRLB |= TCA_SINGLE_CMP0EN_bm;                    // enable Compare Unit 0
       enabled = true;
     break;
     case 1: 
-      compareUnit1 = servoIndex;
+      tca[0].compareUnit1 = servoIndex;
       channels[servoIndex].CompareUnit = 1;
-      _TIMER.CTRLB |= TCA_SINGLE_CMP1EN_bm;                         // enable Compare Unit 1
+      TCA0.SINGLE.CTRLB |= TCA_SINGLE_CMP1EN_bm;                    // enable Compare Unit 1
       enabled = true;
     break;
     case 2: 
-      compareUnit2 = servoIndex;
+      tca[0].compareUnit2 = servoIndex;
       channels[servoIndex].CompareUnit = 2;
-      _TIMER.CTRLB |= TCA_SINGLE_CMP2EN_bm;                         // enable Compare Unit 2     
+      TCA0.SINGLE.CTRLB |= TCA_SINGLE_CMP2EN_bm;                    // enable Compare Unit 2
       enabled = true;
     break;
   }
@@ -115,23 +117,34 @@ static boolean enableCompareUnit(uint8_t compareUnit, uint8_t servoIndex) {
 //    digitalPinToBitPosition() is used to determine the position of a specific pin on that port:  
 //    Px0 becomes 0, Px1 becomes 1 etc
 //******************************************************************************************************
-#define NO_PORT 255
-static uint8_t usedPort = NO_PORT;                                     // Set during 1st initCompareUnit
-
+// NO_PORT is defined in servo_TCA.cpp. usedPort is tca[0].usedPort.
   
-static boolean initCompareUnit(byte pin, uint8_t servoIndex) {
+static boolean initCompareUnitTCA0(byte pin, uint8_t servoIndex) {
   uint8_t compareUnit = digitalPinToBitPosition(pin);
   uint8_t newPort = digitalPinToPort(pin);
-  if (usedPort == NO_PORT) {                       // First call to initCompareUnit?
-    if (!initMultiplexer(newPort)) return false;   // Return if the multiplexer doesn't support the port 
+  if (tca[0].usedPort == NO_PORT) {                // First call to initCompareUnit?
+    if (!initMultiplexerTCA0(newPort, false)) return false; // Return if the multiplexer doesn't support the port
   }
   else {
-    if (usedPort != newPort) return false;         // Return if a subsequent servo request a different port 
+    if (tca[0].usedPort != newPort) return false;  // Return if a subsequent servo request a different port
   }
-  if (!enableCompareUnit(compareUnit, servoIndex)) return false;
+  if (!enableCompareUnitTCA0(compareUnit, servoIndex)) return false;
   pinMode(pin, OUTPUT);                            // Set the pin as output
-  usedPort = newPort;
+  tca[0].usedPort = newPort;
   return true;
+}
+
+
+//******************************************************************************************************
+// Version 2: pinFitsTCA0() performs the same tests as initCompareUnitTCA0(), but doesn't change
+// any register. It is used by attach() to decide if the servo can use TCA0 for this pin.
+//******************************************************************************************************
+static boolean pinFitsTCA0(byte pin) {
+  uint8_t compareUnit = digitalPinToBitPosition(pin);
+  uint8_t newPort = digitalPinToPort(pin);
+  if (compareUnit > 2) return false;                      // Only Px0, Px1 and Px2 have a compare unit
+  if (tca[0].usedPort == NO_PORT) return initMultiplexerTCA0(newPort, true);  // Is the port supported?
+  return (tca[0].usedPort == newPort);                    // All TCA0 servos must use the same port
 }
 
 

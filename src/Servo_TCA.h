@@ -1,10 +1,12 @@
 //******************************************************************************************************
 //
-// file:      servo_TCA0.h
+// file:      Servo_TCA.h
 // author:    Aiko Pras
 // history:   2025-01-10 V1.0.0 ap initial version
+//            2026-11-16 V2.0.0 ap one implementation for TCA0 and TCA1. Was servo_TCA0.h / servo_TCA1.h
+//                                 Only one class: Servo6 (TCA0 and/or TCA1). Was Servo (TCA0) and Servo1 (TCA1)
 //
-// purpose:   Code for upto three servo's that use the TCA timer
+// purpose:   Code for upto three servo's per TCA timer. Processors with a TCA1 timer support six servo's
 //
 // Wherever possible, code was copied from the original Arduino and DxCore servo libraries, to ensure
 // easy migration.// 
@@ -14,11 +16,23 @@
 //
 // Instantiation:
 // --------------
-// If an object is instantiated of the class "Servo", the minimim, maximum and default pulsewidths 
+// If an object is instantiated of the class "Servo6", the minimim, maximum and default pulsewidths 
 // are set, based on MIN_PULSE_WIDTH, MAX_PULSE_WIDTH and DEFAULT_PULSE_WIDTH.
-// Once instatiated, obejcts of class "servo" can't be destroyed. Therefore it is never possible to
-// instatiate more than SERVOS_PER_TIMER objects. If an attempt is made to instantiate an additional
+// Once instatiated, obejcts of class "Servo6" can't be destroyed. Therefore it is never possible to
+// instatiate more than MAX_SERVOS objects. If an attempt is made to instantiate an additional
 // object, that object will be marked as INVALID_SERVO, and be ignored in the remainder of the program.
+// MAX_SERVOS is 6 if the processor has a TCA1 timer, otherwise 3.
+//
+// Version 2: the class Servo6
+// ---------------------------
+// Version 1 had the classes Servo (TCA0) and Servo1 (TCA1). Version 2 has only one class: Servo6.
+// The name avoids a conflict with the class Servo of other servo libraries, such as those of DxCore.
+// The 6 is the maximum number of servos; on processors without a TCA1 timer the maximum is 3.
+// A Servo6 object may use TCA0 or TCA1. The pin that is given to attach() determines which of the
+// two is used. If the pin can be used by both timers (PB0..PB2 and PG0..PG2 on DA/DB, PB0..PB2 on EA),
+// TCA0 is used, unless TCA0 is already in use for servos on another port. In that case TCA1 is used.
+// Thus, if such pins should use TCA1, first attach the servos for the pins that only fit TCA0.
+// See extras/migration-V1-V2.md for the changes needed in existing sketches.
 //
 // Attach(pin [,min, max]) 
 // -----------------------
@@ -33,14 +47,24 @@
 // 
 // Attach initialises the TCA timer, if it was not already initialized during an earlier attach for
 // another servo object. Once initialised, the TCA timer will never be stopped, even if all servo
-// objects got detached. Therefore TCA timer interrupts keep occuring every 6,67 microseconds 
+// objects got detached. Therefore TCA timer interrupts keep occuring every 6,67 milliseconds 
 // (= REFRESH_INTERVAL / SERVOS_PER_TIMER).
+// Version 2: A TCA timer that is not used by any of the attached servos, is not touched.
+//
+// If both TCA timers are used, the timer that is started as second runs half a period (20/6 ms)
+// behind the other timer. Therefore pulses for servos on TCA0 and TCA1 never start at the same time.
+// This limits the peak current if multiple servos move at the same time.
 //
 // Attach initialises the multiplexer, that connects the output of the Compare Unit to the 
-// port to which the specified pin belongs. For DxCore processors, all servos must use the same port.
+// port to which the specified pin belongs. For DxCore processors, all servos that use the same
+// TCA timer must use the same port.
 // For TCA0, only the pins PIN_Px0, PIN_Px1 and PIN_Px2 can be used; attach sets the pin to OUTPUT.
+// For TCA1, see the file servo_Timer_TCA1.h (for DA/DB: PIN_PB0..PB2 or PIN_PC4..PC6).
 //  
-// Attach returns with a servoIndex, which is 0, 1, 2 or INVALID_SERVO.
+// Attach returns with a servoIndex, which is 0 .. (MAX_SERVOS - 1) or INVALID_SERVO.
+//
+// Version 2: attach() should not be called while interrupts are disabled (for example from within
+// an ISR), since attach() enables the interrupts again (see setPhaseOffset() in servo_TCA.cpp).
 //
 //******************************************************************************************************
 #pragma once
@@ -61,7 +85,13 @@
 #define SERVOS_PER_TIMER           3     // the maximum number of servos controlled by one TCA timer
 #define INVALID_SERVO            255     // flag indicating an invalid servo index
 
-#define MAX_SERVOS (SERVOS_PER_TIMER)    // Equals the number of Compare Units on TCA
+// Version 2: Number of TCA timers. MAX_SERVOS equals the number of Compare Units on these timers
+#if defined(TCA1)
+  #define NUMBER_OF_TIMERS         2     // TCA0 and TCA1
+#else
+  #define NUMBER_OF_TIMERS         1     // TCA0 only
+#endif
+#define MAX_SERVOS (SERVOS_PER_TIMER * NUMBER_OF_TIMERS)
 
 
 
@@ -84,10 +114,10 @@
 // A user sketch can check the existance of these new methods, by checking if ACCEPTS_NEW_VALUES and/or
 // CONSTANT_OUTPUT are defined.
 //******************************************************************************************************
-class Servo {
+class Servo6 {
  
   public:
-    Servo();                                       // constructor
+    Servo6();                                      // constructor
     uint8_t attach(uint8_t pin);                   // attach channel to a Compare Unit, sets pinMode, returns servoIndex or INVALID_SERVO
     uint8_t attach(uint8_t pin, int min, int max); // as above but also sets min and max values (in us) for writes.
     void detach();
@@ -105,3 +135,4 @@ class Servo {
     int8_t min;                                    // minimum is this value times 4 added to MIN_PULSE_WIDTH
     int8_t max;                                    // maximum is this value times 4 added to MAX_PULSE_WIDTH
 };
+

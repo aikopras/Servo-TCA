@@ -3,12 +3,13 @@
 // File:      Test_Servo_Moba.ino
 // Author:    Aiko Pras
 // History:   2025/02/11 
+//            2026/11/16 V2.0.0: class ServoMoba6 (was ServoMoba) and header Servo_TCA_MoBa.h
 //
 // Tested on AVR128DA48 (Curiosity Nano)
 // 
 // Skeleton sketch of how to use the Servo Moba (Modellbahn) classes.
-// This sketch uses the TCA0, as well as the TCA1 class, thus supporting 6 servos in total.
-// It is also possible to use only one of these classes, thus limiting the number of servos to 3.
+// This sketch instantiates 6 servos. On processors with a TCA1 timer, upto 6 servos can be used.
+// The pin given to attach() determines if a servo uses TCA0 or TCA1. Only servo0 is attached here.
 //
 // The required amount of program storage is roughly 2,5 KByte. Per servo, 92 Bytes of RAM are needed;
 // 56 of these are needed for the buffer that contains the coordinates for the curve.
@@ -21,16 +22,15 @@
 //******************************************************************************************************
 #include <Arduino.h>
 #include <EEPROM.h>
-#include <Servo_TCA0_MoBa.h>
-#include <Servo_TCA1_MoBa.h>
+#include <Servo_TCA_MoBa.h>  // For objects of the ServoMoba6 class
 
 
-ServoMoba  servo0;           // Instantiate the three servo's on TCA0
-ServoMoba  servo1;
-ServoMoba  servo2;
-ServoMoba1  servo3;          // Instantiate another servo on TCA1
-ServoMoba1  servo4;          // Instantiate another servo on TCA1
-ServoMoba1  servo5;          // Instantiate another servo on TCA1
+ServoMoba6 servo0;           // Instantiate six servo's. The pin given to attach() determines the timer
+ServoMoba6 servo1;
+ServoMoba6 servo2;
+ServoMoba6 servo3;
+ServoMoba6 servo4;
+ServoMoba6 servo5;
 
 
 void makeEepromCurve() {
@@ -74,9 +74,9 @@ void setup() {
   // If the servo should not receive pulses while idle, how many pulses must 
   // still be generated before and after the servo movement?
   // The first parameter may take the values continuous, high or low.
-  servo0.initPulse(ServoMoba::low, 1, 1);
-  // servo1.initPulse(ServoMoba::continuous, 1, 1);
-  // servo2.initPulse(ServoMoba::low, 1, 1);
+  servo0.initPulse(ServoMoba6::low, 1, 1, 1500);
+  // servo1.initPulse(ServoMoba6::continuous, 1, 1, 1500);
+  // servo2.initPulse(ServoMoba6::low, 1, 1, 1500);
 
   // ==========================================================================
   // If present, initialise the hardware that controls the servo's 5V power pin
@@ -106,7 +106,7 @@ void setup() {
   // makeEepromCurve();
   // servo0.initCurveFromEEPROM(0, 0, 100);
   servo0.initCurveFromPROGMEM(0, 2);
-  // servo0.printCurve();  
+  // servo0.printCurve(Serial);  
   // servo0.moveServoAlongCurve(1);
 }
 

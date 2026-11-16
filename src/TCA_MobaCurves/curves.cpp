@@ -4,6 +4,7 @@
 // author:    Aiko Pras
 // history:   2025-02-11 V1.0.0 ap initial version
 //            2025-06-01 V1.0.1 ap move_A and move_B are now between 0..255
+//            2026-11-16 V2.0.0 ap no changes (version number of the library)
 //
 // purpose:   Predefined curves for servos.
 //            The idea is to define a number of curves; each describing a specific path that servos

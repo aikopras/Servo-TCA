@@ -1,18 +1,21 @@
 //******************************************************************************************************
 //
-// file:      servo_TCA0_MoBa.cpp
+// file:      servo_TCA_MoBa.cpp
 // author:    Aiko Pras
 // history:   2025-02-22 V1.0.0 ap initial version
 //            2025-12-06 V1.0.6 ap Debug statements (digitalWriteFast) removed
+//            2026-11-16 V2.0.0 ap was servo_TCA0_MoBa.cpp (servo_TCA1_MoBa.cpp was a copy, and has been
+//                                 removed). Only one class: ServoMoba6. The Serial for printCurve() is
+//                                 now a parameter
 //
-// purpose:   Class for MoBa Servo's. Inherits from Servo.
-//            To be used in conjunction with the TCA0 timer
+// purpose:   Class for MoBa Servo's. Inherits from Servo6.
+//            To be used in conjunction with the TCA0 and/or TCA1 timer
 //
 //
 //******************************************************************************************************
 #include <Arduino.h>
 #include <EEPROM.h>
-#include "../Servo_TCA0_MoBa.h"
+#include "../Servo_TCA_MoBa.h"
 #include "../TCA_MobaCurves/curves.h"
 
 //******************************************************************************************************
@@ -31,7 +34,7 @@
 // - the index to identify the curve. The predefined curves can be found in curves.cpp
 // - the timeStretch factor.
 //******************************************************************************************************
-void ServoMoba::moveServoAlongCurve(uint8_t direction) {
+void ServoMoba6::moveServoAlongCurve(uint8_t direction) {
   servoDirection = direction;
   if (powerOnBeforeMoving >= pulseOnBeforeMoving) {
     countServo = powerOnBeforeMoving;
@@ -51,7 +54,7 @@ void ServoMoba::moveServoAlongCurve(uint8_t direction) {
 };
 
 
-void ServoMoba::initCurveFromEEPROM(uint8_t curveNumber, uint8_t stretch, int adresEeprom) {
+void ServoMoba6::initCurveFromEEPROM(uint8_t curveNumber, uint8_t stretch, int adresEeprom) {
   if (stretch > 0) timeStretch = stretch;
     else timeStretch = 1;
   uint8_t i = 0;                                 // index into the myCurve array
@@ -69,7 +72,7 @@ void ServoMoba::initCurveFromEEPROM(uint8_t curveNumber, uint8_t stretch, int ad
   previousCurve = curveNumber;
 }
 
-void ServoMoba::initCurveFromPROGMEM(uint8_t curveNumber, uint8_t stretch) {
+void ServoMoba6::initCurveFromPROGMEM(uint8_t curveNumber, uint8_t stretch) {
   if (stretch > 0) timeStretch = stretch;
     else timeStretch = 1;
   uint8_t arrayIndex = curveNumber & 0b00111111;
@@ -94,7 +97,7 @@ void ServoMoba::initCurveFromPROGMEM(uint8_t curveNumber, uint8_t stretch) {
 //******************************************************************************************************
 // Must be called from the main loop as frequent as possible
 //******************************************************************************************************
-void ServoMoba::checkServo() {
+void ServoMoba6::checkServo() {
   // If 20 ms have passed, we may switch on/off power, or do something that is 
   // specific for the state we are in. 
   if (acceptsNewValue()) {                     // A pulse has just been initialised
@@ -119,12 +122,12 @@ void ServoMoba::checkServo() {
 //******************************************************************************************************
 // Internal subroutines, one for each of the four possible states
 //******************************************************************************************************
-void ServoMoba::servoIdle() {
+void ServoMoba6::servoIdle() {
 //  IDLE_ON;                                                          // TIJDELIJK
 };
 
 
-void ServoMoba::servoStart() {
+void ServoMoba6::servoStart() {
 //  START_ON;                                                         // TIJDELIJK
   if (countPulse > 0) countPulse--;
     else writeMicroseconds(lastPulseWidth);
@@ -138,7 +141,7 @@ void ServoMoba::servoStart() {
 }
 
 
-void ServoMoba::servoMoving() {
+void ServoMoba6::servoMoving() {
 //  MOVING_ON;
   if ((myCurve[index].time * timeStretch) == (ticks)) {  // new segment
     index++;
@@ -158,7 +161,7 @@ void ServoMoba::servoMoving() {
 };
 
 
-void ServoMoba::servoFinish() {
+void ServoMoba6::servoFinish() {
 //  FINISH_ON;
   bool move2idle = ((countPulse == 0) && (countPower == 0));
   if (countPulse > 0) countPulse--;
@@ -179,19 +182,19 @@ void ServoMoba::servoFinish() {
 // Support methods for the moving state
 //******************************************************************************************************
 // Create the X-coordinate. Mapping function for within individual segments:
-uint16_t ServoMoba::positionIn_us(uint16_t xValue) {
+uint16_t ServoMoba6::positionIn_us(uint16_t xValue) {
   return ((xValue - segment.xFrom) * (long)(segment.yDelta) / segment.xDelta + segment.yFrom);
 };
 
 // Create the Y-coordinate. Mapping function can be used for all X-coordinates
 // Treshold1 and treshold2 should be signed integers, to allow their difference to be negative
-uint16_t ServoMoba::valueTo_us(uint8_t yValue) {
+uint16_t ServoMoba6::valueTo_us(uint8_t yValue) {
   if (servoDirection == 0) return (yValue * (long)(treshold2 - treshold1) / 255 + treshold1);
   else return (yValue * (long)(treshold1 - treshold2) / 255 + treshold2);
 };
 
 // Fill the segment values for a given index
-void ServoMoba::fillSegment(uint8_t index){
+void ServoMoba6::fillSegment(uint8_t index){
   segment.index = index;
   segment.xFrom = myCurve[index-1].time * timeStretch;
   segment.xTo = myCurve[index].time * timeStretch;
@@ -205,7 +208,7 @@ void ServoMoba::fillSegment(uint8_t index){
 //******************************************************************************************************
 // Initialisation
 //******************************************************************************************************
-ServoMoba::ServoMoba() {
+ServoMoba6::ServoMoba6() {
   servoState = idle;
   timeStretch = 1;
   treshold1 = 1400;
@@ -227,7 +230,7 @@ ServoMoba::ServoMoba() {
 }
 
 //******************************************************************************************************
-void ServoMoba::initPulse(             // Need not be called in case of a continuous pulse
+void ServoMoba6::initPulse(             // Need not be called in case of a continuous pulse
     uint8_t idleOutput,                // 0 is low, rest is high
     uint8_t pulseBeforeMoving,         // 0.255. Steps are in 20 ms
     uint8_t pulseAfterMoving,          // 0.255. Steps are in 20 ms
@@ -242,7 +245,7 @@ void ServoMoba::initPulse(             // Need not be called in case of a contin
 }
 
 //******************************************************************************************************
-void ServoMoba::initPower(
+void ServoMoba6::initPower(
   boolean idleDefault,               // should power be switch off while idle?
   uint8_t pin,                       // the pin used to switch the servo power
   boolean enableValue,               // power enable is HIGH or LOW?
@@ -267,44 +270,44 @@ void ServoMoba::initPower(
     else digitalWrite(powerEnablePin, powerEnableValue);
 }
 
-void ServoMoba::powerOn() {
+void ServoMoba6::powerOn() {
   digitalWrite(powerEnablePin, powerEnableValue);
   PowerOnNextTick = false;
 }
 
-void ServoMoba::powerOff() {
+void ServoMoba6::powerOff() {
   digitalWrite(powerEnablePin, !powerEnableValue);
   PowerOffNextTick = false;
 }
 
-void ServoMoba::pulseOff() {
+void ServoMoba6::pulseOff() {
   if (idlePulseDefault == low) constantOutput(0);
   if (idlePulseDefault == high) constantOutput(1);
   PulseOffNextTick = false;
 }
 
 //******************************************************************************************************
-void ServoMoba::setTreshold1(uint16_t value) {
+void ServoMoba6::setTreshold1(uint16_t value) {
   treshold1 = (int16_t)value;
 }
 
-void ServoMoba::setTreshold2(uint16_t value) {
+void ServoMoba6::setTreshold2(uint16_t value) {
   treshold2 = (int16_t)value;
 }
 
-uint16_t ServoMoba::getTreshold1() {
+uint16_t ServoMoba6::getTreshold1() {
   return (uint16_t)treshold1;
 }
 
-uint16_t ServoMoba::getTreshold2() {
+uint16_t ServoMoba6::getTreshold2() {
   return (uint16_t)treshold2;
 }
 
-uint16_t ServoMoba::getFirstCurvePosition() {
+uint16_t ServoMoba6::getFirstCurvePosition() {
   return firstCurvePosition;
 }
 
-uint16_t ServoMoba::getLastCurvePosition() {
+uint16_t ServoMoba6::getLastCurvePosition() {
   return lastCurvePosition;
 }
 
@@ -312,14 +315,18 @@ uint16_t ServoMoba::getLastCurvePosition() {
 //======================================================================================================
 // Code for debugging and testing
 //======================================================================================================
-void ServoMoba::printCurve() {
+// Version 2: The Serial to be used for the output is a parameter, for example printCurve(Monitor).
+// The library itself no longer refers to a specific Serial. Version 1 used Serial1, which doesn't
+// exist on processors with only one USART (such as the ATtiny 0 and 1-series).
+// If the sketch passes a Serial that doesn't exist on the processor, the sketch doesn't compile.
+void ServoMoba6::printCurve(Print &out) {
   uint8_t i = 0;
   bool ready = false;
   do {
-    Serial1.print("Time: ");
-    Serial1.print(myCurve[i].time);
-    Serial1.print(" - Position: ");
-    Serial1.println(myCurve[i].position);
+    out.print("Time: ");
+    out.print(myCurve[i].time);
+    out.print(" - Position: ");
+    out.println(myCurve[i].position);
     if ((i > 0) && (myCurve[i].time == 0)) ready = true;
     i++;
   } while (!ready);

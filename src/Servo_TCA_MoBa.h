@@ -1,24 +1,24 @@
 //******************************************************************************************************
 //
-// file:      Servo_TCA1_MoBa.h
+// file:      Servo_TCA_MoBa.h
 // author:    Aiko Pras
 // history:   2025-02-22 V1.0.0 ap initial version
+//            2026-11-16 V2.0.0 ap one implementation for TCA0 and TCA1. Was Servo_TCA0_MoBa.h and
+//                                 Servo_TCA1_MoBa.h. Only one class: ServoMoba6. printCurve(out)
 //
-// purpose:   Class for MoBa Servo's. Inherits from Servo.
-//            To be used in conjunction with the TCA1 timer
+// purpose:   Class for MoBa Servo's. Inherits from Servo6.
 //
-// There are two, nearly identical classes: ServoMoba and ServoMoba1
-// - ServoMoba uses the TCA0 timer
-// - ServoMoba1 uses the TCA1 timer
-// The user sketch may include one or both header files for these classes, and instantiate objects
-// from one or both of these classes.
-// 
+// Version 2: there is only one class: ServoMoba6
+// Version 1 had the classes ServoMoba (TCA0) and ServoMoba1 (TCA1). A ServoMoba6 object uses the TCA0
+// or the TCA1 timer, depending on the pin given to attach(). See Servo_TCA.h for the details regarding
+// the selection of the timer, and extras/migration-V1-V2.md for the changes needed in existing sketches.
+//
 //******************************************************************************************************
 #pragma once
-#include "Servo_TCA1.h"
+#include "Servo_TCA.h"
 #include "TCA_MobaCurves/curves.h"
 
-class ServoMoba1: public Servo1 {
+class ServoMoba6: public Servo6 {
 
   public:
     enum idlePulseDefault_t {                      // default servo signal in the idle state 
@@ -27,12 +27,12 @@ class ServoMoba1: public Servo1 {
       continuous
     };
 
-    ServoMoba1();                                   // constructor
+    ServoMoba6();                                  // constructor
     void checkServo();                             // Must be called as often as possible from the main loop 
 
     void moveServoAlongCurve(uint8_t direction);   // Start moving along the path selected with initCurve
     bool movementCompleted = true;                 // Flag to indicate servo is not moving 
-    
+
     void initCurveFromEEPROM(                      // use a predefined curve from EEPROM
       uint8_t indexCurve,                          // 0..3
       uint8_t timeStretch,                         // 1..255
@@ -69,10 +69,10 @@ class ServoMoba1: public Servo1 {
 
     uint8_t previousCurve;                         // The curve that is currently loaded into myCurve
 
-    void powerOn();                                // Switch power now
-    void powerOff();                               // Switch power now
+    void powerOn();                                // Switch power on
+    void powerOff();                               // Switch power off
 
-    void printCurve();                             // May be used for testing. Uses Serial1
+    void printCurve(Print &out);                   // May be used for testing. Output to the given Serial, e.g. printCurve(Monitor)
 
   //====================================================================================================
   private:
@@ -92,7 +92,7 @@ class ServoMoba1: public Servo1 {
       idle,
       start,
       moving,
-      finish
+      finish,
     } servoState;
 
     void servoIdle();                              // Actions to be perfomed while in the idle phase
@@ -139,6 +139,5 @@ class ServoMoba1: public Servo1 {
     uint8_t countServo;
     uint8_t countPulse;
     uint8_t countPower;
-
-   
 };
+

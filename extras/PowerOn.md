@@ -43,7 +43,7 @@ The sketch [can be found](../examples/Test_TCA_Power_on/Test_TCA_Power_on.ino) i
 ---
 ```
 #include <Arduino.h>
-#include <Servo_TCA0.h>                  // For objects of the servo class (TCA0)
+#include <Servo_TCA.h>                   // For objects of the Servo6 class
 
 #define SERVO_PIN             PIN_PF0    // Select the pin that suits your board.
 #define SERVO_ENABLE_PIN      PIN_PA1    // Select the pin that suits your board.
@@ -51,7 +51,7 @@ The sketch [can be found](../examples/Test_TCA_Power_on/Test_TCA_Power_on.ino) i
 #define POWER_UP_DELAY        100        // Number of milliseconds to wait before the servo gets power
 #define PULSE_DELAY           100        // Number of milliseconds to wait before the servo gets pulses
 
-Servo  servo0;                           // Instantiate the three servo's on TCA0
+Servo6 servo0;                           // Instantiate the servo
 
 void setup() {
   pinMode(SERVO_ENABLE_PIN, OUTPUT);     // configure the power enable pin as output

@@ -6,8 +6,8 @@
 # Datatypes (KEYWORD1)
 #######################################
 	
-Servo				KEYWORD1
-Servo1				KEYWORD1
+Servo6				KEYWORD1
+ServoMoba6			KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)

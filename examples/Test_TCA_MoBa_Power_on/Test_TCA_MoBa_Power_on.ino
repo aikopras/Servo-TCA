@@ -3,6 +3,7 @@
 // File:      Test_TCA_MoBa_Power_on.ino
 // Author:    Aiko Pras
 // History:   2025/04/27
+//            2026/11/16 V2.0.0: class ServoMoba6 (was ServoMoba) and header Servo_TCA_MoBa.h
 //
 // Different servos behave differently when power is switched on, or when servos start moving. 
 // This sketch allows for experiments to find the power and pulse related settings that fit best
@@ -82,7 +83,7 @@
 //
 // ******************************************************************************************************
 #include <Arduino.h>
-#include <Servo_TCA0_MoBa.h>             // For objects of the servo MoBa class (TCA0)
+#include <Servo_TCA_MoBa.h>              // For objects of the ServoMoba6 class
 
 #define SERVO_PIN             PIN_PF0    // Select the pin that suits your board.
 #define SERVO_ENABLE_PIN      PIN_PA1    // Select the pin that suits your board.
@@ -104,7 +105,7 @@
 #define initialPulseWidth     1500       // Used by initPulse for the first pulses after startup
 
 // ******************************************************************************************************
-ServoMoba  servo0;                       // Instantiate the servo
+ServoMoba6 servo0;                       // Instantiate the servo
 
 
 void setup() {

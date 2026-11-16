@@ -3,6 +3,7 @@
 // File:      Test_TCA0.ino
 // Author:    Aiko Pras
 // History:   2025/01/15
+//            2026/11/16 V2.0.0: class Servo6 (was Servo) and header Servo_TCA.h
 //
 // Tested on AVR128DA48, AVR64EA48, AVR64DD32, ATtiny1607, ATtiny3217, ATtiny1627, 4809
 //
@@ -13,13 +14,13 @@
 //
 //******************************************************************************************************
 #include <Arduino.h>
-#include <Servo_TCA0.h>      // For objects of the servo class (TCA0)
+#include <Servo_TCA.h>       // For objects of the Servo6 class
 
 #define CPU_Pin PIN_PA7      // To give the main loop something to do.
 
-Servo  servo0;               // Instantiate the three servo's on TCA0
-Servo  servo1;
-Servo  servo2;
+Servo6 servo0;               // Instantiate the three servo's. The pins (PF0..PF2) determine TCA0
+Servo6 servo1;
+Servo6 servo2;
 
 
 void setup() {
